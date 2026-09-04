@@ -1,0 +1,22 @@
+<!--?xml version="1.0" encoding="utf-8" ?--><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="../../../../../../_rhdefault.css"></head><body id="rotate_screen_and_widgets" class="topic" lang="en_US"><div class="breadcrumbs"><div><div><a href=""></a></div><div><a href="contents/ditamaps/ditamap11150359020374145070/pdfproject/dita/topics/rotate-screen-and-widgets">rotate_screen_and_widgets</a></div></div></div><h1 class="title">Rotate screen and widgets </h1><div class="collapsible-tags collapsed-tag prolog"><span class="prefix-content">Prolog information</span><div class="author"><span class="prefix-content">Author: </span>${nxp-useremail}</div><div class="publisher"><span class="prefix-content">Publisher: </span>NXP B.V.</div><div class="critdates"><span class="prefix-content">Critical dates: </span><div class="created tcx-empty-element" data-attr-date="2023-08-15"><span class="prefix-content">Created: 2023-08-15</span></div><div class="revised tcx-empty-element" data-attr-modified="2023-08-15"><span class="prefix-content">Revised: 2023-08-15</span></div></div><div class="permissions tcx-empty-element" data-attr-view=""><span class="prefix-content">Permissions:  </span></div><div class="metadata tcx-empty-element"><span class="prefix-content">Metadata</span></div></div><div class="p"><div><div><span>This chapter describes how to rotate the panel of i.MX RT1060EVK from landscape mode to portrait mode using PXP. To support the rotate panel, we must update the flash display function in </span><code class="ph codeph display-inline">sdk\Core\board\lvgl_support.c</code><span>. </span></div></div></div><div class="p"><div><div><span>Here is the example code to show how to update the flash display function:</span></div></div></div><code class="pre-white-space pre codeblock display-block" data-attr-xml:space="preserve">#if DEMO_USE_ROTATE<br><br>
+#if LV_USE_GPU_NXP_PXP /* Use PXP to rotate the panel. */<br><br>
+lv_area_t dest_area =&nbsp;<br><br>
+{<br><br>
+&nbsp; &nbsp; .x1 = 0,<br><br>
+&nbsp; &nbsp; .x2 = LCD_HEIGHT - 1,<br><br>
+&nbsp; &nbsp; .y1 = 0,<br><br>
+&nbsp; &nbsp; .y2 = LCD_WIDTH - 1,<br><br>
+};<br><br>
+lv_gpu_nxp_pxp_blit(((lv_color_t *)s_inactiveFrameBuffer), &amp;dest_area, LCD_WIDTH, color_p, area, LV_OPA_COVER, LV_DISP_ROT_270);<br><br>
+#else /* Use CPU to rotate the panel. */<br><br>
+for (uint32_t y = 0; y &lt; LVGL_BUFFER_HEIGHT; y++)<br><br>
+{<br><br>
+&nbsp; &nbsp; for (uint32_t x = 0; x &lt; LVGL_BUFFER_WIDTH; x++)<br><br>
+&nbsp; &nbsp; {<br><br>
+&nbsp; &nbsp; &nbsp; &nbsp; ((lv_color_t *)s_inactiveFrameBuffer)[(LCD_HEIGHT - x) * LCD_WIDTH + y] = color_p[y * LVGL_BUFFER_WIDTH + x];<br><br>
+&nbsp; &nbsp; }<br><br>
+}<br><br>
+#endif<br><br>
+DEMO_FLUSH_DCACHE();<br><br>
+ELCDIF_SetNextBufferAddr(LCDIF, (uint32_t)s_inactiveFrameBuffer);<br><br>
+#else /* DEMO_USE_ROTATE */&nbsp;<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></code><div class="p"><div><div><span>For more information, refer to the i.MX RT1170 SDK from GUI Guider template.</span></div></div></div></body></html>
