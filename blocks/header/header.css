@@ -472,8 +472,8 @@ header nav .nav-minitoc { display: none; }
   header nav .nav-main .nav-brand img { height: 32px; width: auto; }
   header nav .nav-main .nav-brand .brand-text {
   color: #fff;
-  font-weight: 500;
-  font-size: 1.1rem;
+  font-weight: 400;
+  font-size: 1rem;
   white-space: nowrap;
   line-height: 1;
 }
