@@ -126,7 +126,7 @@ export default async function decorate(block) {
   if (brandImg && !nav.querySelector('.nav-brand .brand-text')) {
     const label = document.createElement('span');
     label.className = 'brand-text';
-    label.textContent = 'Experience Manager';
+    label.textContent = 'Vishabh Docs';
     const picture = brandImg.closest('picture') || brandImg;
     picture.insertAdjacentElement('afterend', label);
   }
