@@ -118,6 +118,16 @@ export default async function decorate(block) {
       });
     }
 
+    //Add branding adobe-logo Sep 14
+    const brandImg = nav.querySelector('img');
+if (brandImg) {
+  brandImg.src = '/blocks/header/adobe-logo.svg';
+  brandImg.removeAttribute('srcset');
+  brandImg.alt = 'Adobe';
+  // also neutralize <source> siblings so the picture doesn't override it
+  nav.querySelectorAll('picture source').forEach((s) => s.remove());
+}
+
     // toc button for mobile toc view
     const button = nav.querySelector('.nav-toc-btn')
     const a_tag = button.querySelector('a')
