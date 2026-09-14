@@ -469,10 +469,10 @@ header nav .nav-minitoc { display: none; }
     align-items: center;
     height: var(--nav-height);
   }
-  header nav .nav-main .nav-brand img { height: 40px; width: auto; }
+  header nav .nav-main .nav-brand img { height: 32px; width: auto; }
   header nav .nav-main .nav-brand .brand-text {
   color: #fff;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 1.1rem;
   white-space: nowrap;
   line-height: 1;
