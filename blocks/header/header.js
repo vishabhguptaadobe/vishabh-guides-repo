@@ -118,7 +118,7 @@ export default async function decorate(block) {
   // Force the Adobe logo (survives every Guides republish)
   const brandImg = nav.querySelector('.nav-brand img, img');
   if (brandImg) {
-    brandImg.src = '/blocks/header/adobe-logo.svg';
+    brandImg.src = '/blocks/header/adobe-red-logo.svg';
     brandImg.removeAttribute('srcset');
     brandImg.setAttribute('alt', 'Adobe');
     nav.querySelectorAll('picture source').forEach((s) => s.remove());
