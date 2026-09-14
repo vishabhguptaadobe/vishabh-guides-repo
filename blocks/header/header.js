@@ -84,6 +84,8 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
+/**Decorate old code13 Sep
+
 export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
@@ -150,4 +152,109 @@ if (a_tag) {
     migrateTree(isDesktop)
     isDesktop.addEventListener('change', () => migrateTree(isDesktop));
   }
+}
+**
+Belore is new Decorate code- 14 Sep
+**/
+
+export default async function decorate(block) {
+  // fetch nav content
+  const navMeta = getMetadata('nav');
+  const navPath = navMeta ? new URL(navMeta).pathname : '/nav';
+  const resp = await fetch(`${navPath}.plain.html`);
+
+  if (!resp.ok) return;
+
+  const html = await resp.text();
+
+  const nav = document.createElement('nav');
+  nav.id = 'nav';
+  nav.innerHTML = html;
+
+  // The AEM Guides nav fragment has a sidenav block, a "main" block
+  // (logo + title + links + toc button) and a minitoc block, in no fixed
+  // order. Detect each by content instead of by position.
+  [...nav.children].forEach((section) => {
+    if (section.querySelector('.sidenav')) {
+      section.classList.add('nav-sidenav');
+    } else if (section.querySelector('.minitoc')) {
+      section.classList.add('nav-minitoc');
+    } else {
+      section.classList.add('nav-main');
+    }
+  });
+
+  const mainSection = nav.querySelector('.nav-main');
+  if (mainSection) {
+    // logo
+    const logoPara = mainSection.querySelector('picture')?.closest('p');
+    if (logoPara) logoPara.classList.add('nav-brand');
+
+    // title (kept as .nav-sections so the toggle logic still works)
+    const title = mainSection.querySelector('#title, h3');
+    if (title) title.classList.add('nav-sections');
+
+    // action links + toc button -> nav-tools
+    const tools = document.createElement('div');
+    tools.classList.add('nav-tools');
+    mainSection.querySelectorAll(':scope > p').forEach((p) => {
+      if (p.querySelector('picture')) return;          // skip logo
+      if (p.closest('.header-button-group')) return;
+      tools.append(p);
+    });
+    const btnGroup = mainSection.querySelector('.header-button-group');
+    if (btnGroup) {
+      btnGroup.classList.add('nav-toc-btn');
+      tools.append(btnGroup);
+    }
+    mainSection.append(tools);
+  }
+
+  // ensure .nav-sections always exists so the toggle logic never crashes
+  let navSections = nav.querySelector('.nav-sections');
+  if (!navSections) {
+    navSections = document.createElement('div');
+    navSections.classList.add('nav-sections');
+    (mainSection || nav).append(navSections);
+  }
+
+  navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
+    if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+    navSection.addEventListener('click', () => {
+      if (isDesktop.matches) {
+        const expanded = navSection.getAttribute('aria-expanded') === 'true';
+        toggleAllNavSections(navSections);
+        navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      }
+    });
+  });
+
+  // toc button for mobile toc view
+  const button = nav.querySelector('.nav-toc-btn');
+  const aTag = button ? button.querySelector('a') : null;
+  if (aTag) {
+    aTag.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      toggleMenu(nav, navSections);
+    });
+  }
+
+  // hamburger for mobile
+  const hamburger = document.createElement('div');
+  hamburger.classList.add('nav-hamburger');
+  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
+      <span class="nav-hamburger-icon"></span>
+    </button>`;
+  nav.prepend(hamburger);
+  nav.setAttribute('aria-expanded', 'false');
+  toggleMenu(nav, navSections, isDesktop.matches);
+  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  decorateIcons(nav);
+  const navWrapper = document.createElement('div');
+  navWrapper.className = 'nav-wrapper';
+  navWrapper.append(nav);
+  block.append(navWrapper);
+  migrateTree(isDesktop);
+  isDesktop.addEventListener('change', () => migrateTree(isDesktop));
 }
