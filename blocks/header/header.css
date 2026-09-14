@@ -438,3 +438,63 @@ header nav .nav-tools {
   display: flex;
   flex-direction: row-reverse;
 }
+
+/* ---- desktop header layout fix ---- */
+@media (min-width: 900px) {
+  header nav,
+  header nav[aria-expanded="true"],
+  header nav[hamburger-expanded="true"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    height: var(--nav-height);
+    min-height: var(--nav-height);
+    overflow: visible;
+    grid-template: none;
+  }
+
+  header nav .nav-hamburger { display: none; }
+
+  header nav .nav-brand {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  header nav .nav-sections { flex: 1 1 auto; }
+
+  header nav .nav-tools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;            /* pushes the buttons to the right */
+  }
+
+  header nav .nav-tools .header-button-group,
+  header nav .nav-tools .header-button-group > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* make Contact us / Sign up look like the buttons in your reference */
+  header nav .header-button-group > div > div {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--header-button-group-button-border-color, #fff);
+    border-radius: 0.25rem;
+  }
+
+  header nav .header-button-group > div > div a {
+    font-size: var(--body-font-size-xs);
+    text-decoration: none;
+    color: #fff;
+    white-space: nowrap;
+  }
+}
+/* ---- desktop header layout fix end---- */
