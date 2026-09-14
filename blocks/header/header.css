@@ -498,3 +498,33 @@ header nav .nav-tools {
   }
 }
 /* ---- desktop header layout fix end---- */
+/* ---- NEW CSS code for header 
+guides nav: content-based layout ---- 14 Sep*/
+
+header nav .nav-sidenav,
+header nav .nav-minitoc { display: none; }   /* these belong to the page, not the top bar */
+
+header nav .nav-main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  height: var(--nav-height);
+}
+
+header nav .nav-main .nav-brand { margin: 0; }
+header nav .nav-main .nav-brand img { height: 32px; width: auto; }
+
+/* placeholder "Title" hidden for now — delete this rule to show it */
+header nav .nav-main .nav-sections { display: none; }
+
+header nav .nav-main .nav-tools {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;               /* push links to the right */
+}
+header nav .nav-main .nav-tools p { margin: 0; white-space: nowrap; }
+header nav .nav-main .nav-tools a { color: #fff; text-decoration: none; }
