@@ -119,12 +119,14 @@ export default async function decorate(block) {
     }
 
     // toc button for mobile toc view
-    const button = nav.querySelector('.nav-toc-btn')
-    const a_tag = button.querySelector('a')
-    a_tag.addEventListener('click', evt => {
-      evt.preventDefault()
-      toggleMenu(nav, navSections)
-    })
+    const button = nav.querySelector('.nav-toc-btn');
+const a_tag = button ? button.querySelector('a') : null;
+if (a_tag) {
+  a_tag.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    toggleMenu(nav, navSections);
+  });
+}
     
 
 
