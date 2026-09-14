@@ -192,7 +192,12 @@ export default async function decorate(block) {
 
     // title (kept as .nav-sections so the toggle logic still works)
     const title = mainSection.querySelector('#title, h3');
-    if (title) title.classList.add('nav-sections');
+if (title) {
+  const sectionsWrap = document.createElement('div');
+  sectionsWrap.classList.add('nav-sections');
+  title.replaceWith(sectionsWrap);
+  sectionsWrap.append(title);   // h3 now lives *inside* .nav-sections
+}
 
     // action links + toc button -> nav-tools
     const tools = document.createElement('div');
