@@ -123,12 +123,13 @@ export default async function decorate(block) {
     brandImg.setAttribute('alt', 'Adobe');
     nav.querySelectorAll('picture source').forEach((s) => s.remove());
   }
-  if (brandImg && !brandImg.parentElement.querySelector('.brand-text')) {
-  const label = document.createElement('span');
-  label.className = 'brand-text';
-  label.textContent = 'Docs';
-  brandImg.insertAdjacentElement('afterend', label);
-}
+  if (brandImg && !nav.querySelector('.nav-brand .brand-text')) {
+    const label = document.createElement('span');
+    label.className = 'brand-text';
+    label.textContent = 'Docs';
+    const picture = brandImg.closest('picture') || brandImg;
+    picture.insertAdjacentElement('afterend', label);
+  }
 
   let navSections = nav.querySelector('.nav-sections');
   if (!navSections) {
