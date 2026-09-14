@@ -528,3 +528,10 @@ header nav .nav-main .nav-tools {
 }
 header nav .nav-main .nav-tools p { margin: 0; white-space: nowrap; }
 header nav .nav-main .nav-tools a { color: #fff; text-decoration: none; }
+
+@media (min-width: 900px) {
+  header nav .nav-hamburger,
+  header nav .nav-toc-btn {
+    display: none !important;
+  }
+}
