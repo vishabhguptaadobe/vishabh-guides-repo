@@ -470,6 +470,13 @@ header nav .nav-minitoc { display: none; }
     height: var(--nav-height);
   }
   header nav .nav-main .nav-brand img { height: 40px; width: auto; }
+  header nav .nav-main .nav-brand .brand-text {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  line-height: 1;
+}
   header nav .nav-main .nav-sections { display: none; }   /* hides "Title" on desktop */
   header nav .nav-main .nav-tools {
     display: flex; flex-direction: row; align-items: center;
