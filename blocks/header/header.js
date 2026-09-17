@@ -96,6 +96,8 @@ function tagNavSections(nav) {
   const tocGroup = content.querySelector('.header-button-group');
   if (tocGroup) {
     tocGroup.classList.add('nav-toc-btn');
+    // strip header-button-group so the contact/signin icon rules don't paint the TOC pill
+    tocGroup.classList.remove('header-button-group');
     nav.append(tocGroup);
   }
 
