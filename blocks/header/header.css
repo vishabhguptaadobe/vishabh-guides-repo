@@ -166,7 +166,7 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
   }
 
   /* Contact us / Sign up as icon buttons on mobile */
-  header nav .nav-tools .nav-action {
+    header nav .nav-tools .nav-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -175,18 +175,19 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
     font-size: 0;
     border-radius: 0.25rem;
     border: 1px solid #fff;
-    background-color: #fff;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 1.1rem;
   }
 
   header nav .nav-tools .nav-action-contact {
-    background-image: url('./contact.svg');
+    background: #fff url('./contact.svg') no-repeat center;
+    background-size: 1.1rem;
   }
 
   header nav .nav-tools .nav-action-signup {
-    background-image: url('./signin.svg');
+    background: #fff url('./signin.svg') no-repeat center;
+    background-size: 1.1rem;
   }
 
    /* mobile "Table of content" pill (the .nav-toc-btn button group) */
