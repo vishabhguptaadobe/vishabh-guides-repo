@@ -470,7 +470,7 @@ header nav .nav-tools {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    
     gap: 1.5rem;
     height: var(--nav-height);
     grid-template: none;
@@ -508,6 +508,8 @@ header nav .nav-tools {
   }
   header nav .nav-tools p { margin: 0; white-space: nowrap; }
   header nav .nav-tools a { color: #fff; text-decoration: none; }
+  header nav .nav-sections { display: none !important; }
+  header nav .nav-placeholder { display: none !important; }
 
   header nav .nav-toc-btn { display: none !important; }   /* TOC pill only on mobile */
 }
