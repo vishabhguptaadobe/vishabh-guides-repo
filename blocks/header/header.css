@@ -286,7 +286,12 @@ header nav[aria-expanded="true"] .nav-hamburger-icon {
 header .nav-brand {
   grid-area: brand;
   height: 64px;
-  flex-basis: 64px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: auto;
+  flex-basis: auto;
+  white-space: nowrap;
   font-size: var(--heading-font-size-s);
   font-weight: 700;
   line-height: 1;
@@ -295,6 +300,14 @@ header .nav-brand {
 header nav .nav-brand img {
   width: 64px;
   height: 100%;
+  flex: 0 0 auto;
+}
+
+header nav .nav-brand .brand-text {
+  color: var(--header-title-color, #fff);
+  font-size: var(--heading-font-size-s);
+  font-weight: 700;
+  line-height: 1;
 }
 
 /* sections */
