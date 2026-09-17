@@ -69,34 +69,45 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
- * Tag each top-level div of the DITA-generated nav fragment by WHAT IT CONTAINS,
- * not by its position. The publish can change the number/order of these divs, so
- * position-based tagging (child 0 = brand, etc.) is fragile. Content-based tagging
- * keeps the logo, title, tools, and toc-button correctly identified across republishes.
+ * Build the header slots from the actual DITA nav fragment.
+ * The fragment ships as three top-level <div>s:
+ *   1) a wrapper containing .sidenav   (left TOC placeholder)
+ *   2) one combined content div: <p><img></p>, <p>Contact us</p>, <p>Sign up</p>,
+ *      and a .header-button-group holding the mobile "Table of content" button
+ *   3) a wrapper containing .minitoc   (right "in this article" placeholder)
+ * So we can't tag whole divs — we pull the pieces out of the content div and
+ * place them into real brand / tools / toc-btn slots. Content-driven, so it
+ * survives Guides republishes.
  * @param {Element} nav The <nav> element
  */
 function tagNavSections(nav) {
-  [...nav.children].forEach((section) => {
-    if (
-      section.classList.contains('nav-brand')
-      || section.classList.contains('nav-sections')
-      || section.classList.contains('nav-tools')
-      || section.classList.contains('nav-toc-btn')
-    ) return;
-
-    if (section.querySelector('img, picture')) {
-      section.classList.add('nav-brand');
-    } else if (section.querySelector('#toc-mob-button')) {
-      // the mobile "Table of content" button group — check before .nav-tools,
-      // since it is also a .header-button-group
-      section.classList.add('nav-toc-btn');
-    } else if (section.querySelector('.search, .header-button-group')) {
-      section.classList.add('nav-tools');
-    } else {
-      // whatever is left (the title / menu list) is the sections slot
-      section.classList.add('nav-sections');
-    }
+  // hide the sidenav / minitoc placeholders (migrateTree relocates their contents)
+  nav.querySelectorAll(':scope > div').forEach((div) => {
+    if (div.querySelector('.sidenav, .minitoc')) div.classList.add('nav-placeholder');
   });
+
+  // the content div is the one holding the logo image
+  const content = nav.querySelector(':scope > div:has(img, picture)')
+    || [...nav.children].find((d) => d.querySelector('img, picture'));
+  if (!content) return;
+  content.classList.add('nav-brand');
+
+  // move the mobile "Table of content" button group into its own slot
+  const tocGroup = content.querySelector('.header-button-group');
+  if (tocGroup) {
+    tocGroup.classList.add('nav-toc-btn');
+    nav.append(tocGroup);
+  }
+
+  // move the link paragraphs (Contact us / Sign up) into a tools slot,
+  // leaving the logo paragraph behind in the brand slot
+  const tools = document.createElement('div');
+  tools.classList.add('nav-tools');
+  content.querySelectorAll(':scope > p').forEach((p) => {
+    if (p.querySelector('img, picture')) return;
+    tools.append(p);
+  });
+  if (tools.children.length) nav.append(tools);
 }
 
 export default async function decorate(block) {
@@ -110,12 +121,18 @@ export default async function decorate(block) {
   nav.id = 'nav';
   nav.innerHTML = html;
 
-  // 1) Identify the nav slots by content (order-independent).
+  // 1) Build brand / tools / toc-btn slots from the fragment.
   tagNavSections(nav);
 
-  // 2) Logo: force our repo asset and guarantee its container is the brand slot,
-  //    so the CSS that sizes/positions the logo actually matches. The DITA nav
-  //    ships a bare <img> (no <picture>), so match the <img> directly.
+  // migrateTree expects a .nav-sections container; add an empty one if absent.
+  if (!nav.querySelector('.nav-sections')) {
+    const emptySections = document.createElement('div');
+    emptySections.classList.add('nav-sections');
+    nav.append(emptySections);
+  }
+
+  // 2) Logo: force our repo asset (the DITA src often fails to resolve),
+  //    and add the "Vishabh Docs" label beside it — once.
   const brandImg = nav.querySelector('.nav-brand img, img');
   if (brandImg) {
     brandImg.src = '/blocks/header/logo.svg';
@@ -123,21 +140,20 @@ export default async function decorate(block) {
     brandImg.setAttribute('alt', 'CompanyLogo');
     nav.querySelectorAll('picture source').forEach((s) => s.remove());
 
-    // Ensure the logo's own container carries .nav-brand even if tagging missed it.
     const brandContainer = brandImg.closest('.nav-brand') || brandImg.closest('div') || brandImg.parentElement;
     if (brandContainer) {
       brandContainer.classList.add('nav-brand');
-      // Add the brand label once, right after the logo.
       if (!brandContainer.querySelector('.brand-text')) {
         const label = document.createElement('span');
         label.className = 'brand-text';
         label.textContent = 'Vishabh Docs';
-        (brandImg.closest('picture') || brandImg).insertAdjacentElement('afterend', label);
+        const anchor = brandImg.closest('p') || brandImg.closest('picture') || brandImg;
+        anchor.insertAdjacentElement('afterend', label);
       }
     }
   }
 
-  // 3) Wire up sections (dropdowns), if any.
+  // 3) Section dropdowns (if the sections slot ever contains a menu).
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
