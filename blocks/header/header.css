@@ -152,7 +152,7 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
   }
 
   header nav .nav-tools {
-    flex-direction: row !important;
+    flex-direction: row;
     gap: 1rem;
     align-items: center;
   }
@@ -162,6 +162,49 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
     text-decoration: none;
   }
 
+  /* mobile "Table of content" pill (the .nav-toc-btn button group) */
+  header nav .nav-toc-btn {
+    grid-area: toc-btn;
+    width: auto;
+    margin: 0;
+    padding: 0 1rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-color: var(--background-color);
+  }
+
+  header nav .nav-toc-btn > div,
+  header nav .nav-toc-btn > div > div {
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: auto;
+    border: 0;
+    background: none;
+    padding: 0;
+  }
+
+  header nav .nav-toc-btn a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--body-font-size-s);
+    line-height: 1.25rem;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 0.25rem;
+    border: 0.5px solid var(--header-mob-toc-btn-border-color, #c0c0c0);
+    background: var(--header-mob-toc-btn-bg-color, #f1f1f1);
+    padding: 0.375rem 0.75rem;
+    white-space: nowrap;
+  }
+
+  header nav .nav-toc-btn a::before {
+    content: url(../sidenav/toc-icon.svg);
+    display: inline-block;
+    line-height: 0;
+  }
 
 header .header-button-group > div {
   gap: 0.5rem;
@@ -488,13 +531,11 @@ header nav .nav-tools {
     display: flex;
     flex-direction: row;
     align-items: center;
-    
     gap: 1.5rem;
     height: var(--nav-height);
     grid-template: none;
     overflow: visible;
   }
-  
   header nav .nav-hamburger { display: none; }
 
   header nav .nav-brand {
@@ -516,7 +557,8 @@ header nav .nav-tools {
     line-height: 1;
   }
 
-  header nav .nav-sections { display: none; }   /* hides the empty "Title" on desktop */
+  header nav .nav-sections { display: none !important; }
+  header nav .nav-placeholder { display: none !important; }
 
   header nav .nav-tools {
     display: flex;
@@ -527,8 +569,6 @@ header nav .nav-tools {
   }
   header nav .nav-tools p { margin: 0; white-space: nowrap; }
   header nav .nav-tools a { color: #fff; text-decoration: none; }
-  header nav .nav-sections { display: none !important; }
-  header nav .nav-placeholder { display: none !important; }
 
   header nav .nav-toc-btn { display: none !important; }   /* TOC pill only on mobile */
 }
