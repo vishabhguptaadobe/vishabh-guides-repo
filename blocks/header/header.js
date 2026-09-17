@@ -115,12 +115,12 @@ export default async function decorate(block) {
     mainSection.append(tools);
   }
 
-  // Force the Adobe logo (survives every Guides republish)
+  // Add the logo (survives every Guides republish)
   const brandImg = nav.querySelector('.nav-brand img, img');
   if (brandImg) {
-    brandImg.src = '/blocks/header/adobe-red-logo.svg';
+    brandImg.src = '/blocks/header/logo.svg';
     brandImg.removeAttribute('srcset');
-    brandImg.setAttribute('alt', 'Adobe');
+    brandImg.setAttribute('alt', 'CompanyLogo');
     nav.querySelectorAll('picture source').forEach((s) => s.remove());
   }
   if (brandImg && !nav.querySelector('.nav-brand .brand-text')) {
