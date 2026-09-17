@@ -162,6 +162,30 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
     text-decoration: none;
   }
 
+  /* Contact us / Sign up as icon buttons on mobile */
+  header nav .nav-tools .nav-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0;
+    border-radius: 0.25rem;
+    border: 1px solid var(--header-button-group-button-border-color, #fff);
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 1.1rem;
+  }
+
+  header nav .nav-tools .nav-action-contact {
+    background-image: url('./contact.svg');
+  }
+
+  header nav .nav-tools .nav-action-signup {
+    background-image: url('./signin.svg');
+  }
+
   /* mobile "Table of content" pill (the .nav-toc-btn button group) */
   header nav .nav-toc-btn {
     grid-area: toc-btn;
