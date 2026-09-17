@@ -68,6 +68,37 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
+/**
+ * Tag each top-level div of the DITA-generated nav fragment by WHAT IT CONTAINS,
+ * not by its position. The publish can change the number/order of these divs, so
+ * position-based tagging (child 0 = brand, etc.) is fragile. Content-based tagging
+ * keeps the logo, title, tools, and toc-button correctly identified across republishes.
+ * @param {Element} nav The <nav> element
+ */
+function tagNavSections(nav) {
+  [...nav.children].forEach((section) => {
+    if (
+      section.classList.contains('nav-brand')
+      || section.classList.contains('nav-sections')
+      || section.classList.contains('nav-tools')
+      || section.classList.contains('nav-toc-btn')
+    ) return;
+
+    if (section.querySelector('img, picture')) {
+      section.classList.add('nav-brand');
+    } else if (section.querySelector('#toc-mob-button')) {
+      // the mobile "Table of content" button group — check before .nav-tools,
+      // since it is also a .header-button-group
+      section.classList.add('nav-toc-btn');
+    } else if (section.querySelector('.search, .header-button-group')) {
+      section.classList.add('nav-tools');
+    } else {
+      // whatever is left (the title / menu list) is the sections slot
+      section.classList.add('nav-sections');
+    }
+  });
+}
+
 export default async function decorate(block) {
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta).pathname : '/nav';
@@ -79,76 +110,49 @@ export default async function decorate(block) {
   nav.id = 'nav';
   nav.innerHTML = html;
 
-  // Content-aware section detection (works with the DITA-generated nav)
-  [...nav.children].forEach((section) => {
-    if (section.querySelector('.sidenav')) section.classList.add('nav-sidenav');
-    else if (section.querySelector('.minitoc')) section.classList.add('nav-minitoc');
-    else section.classList.add('nav-main');
-  });
+  // 1) Identify the nav slots by content (order-independent).
+  tagNavSections(nav);
 
-  const mainSection = nav.querySelector('.nav-main');
-  if (mainSection) {
-    const logoPara = mainSection.querySelector('picture')?.closest('p');
-    if (logoPara) logoPara.classList.add('nav-brand');
-
-    // wrap the h3 in a real .nav-sections container (migrateTree needs it)
-    const title = mainSection.querySelector('#title, h3');
-    if (title) {
-      const sectionsWrap = document.createElement('div');
-      sectionsWrap.classList.add('nav-sections');
-      title.replaceWith(sectionsWrap);
-      sectionsWrap.append(title);
-    }
-
-    const tools = document.createElement('div');
-    tools.classList.add('nav-tools');
-    mainSection.querySelectorAll(':scope > p').forEach((p) => {
-      if (p.querySelector('picture')) return;
-      if (p.closest('.header-button-group')) return;
-      tools.append(p);
-    });
-    const btnGroup = mainSection.querySelector('.header-button-group');
-    if (btnGroup) {
-      btnGroup.classList.add('nav-toc-btn');
-      tools.append(btnGroup);
-    }
-    mainSection.append(tools);
-  }
-
-  // Add the logo (survives every Guides republish)
+  // 2) Logo: force our repo asset and guarantee its container is the brand slot,
+  //    so the CSS that sizes/positions the logo actually matches. The DITA nav
+  //    ships a bare <img> (no <picture>), so match the <img> directly.
   const brandImg = nav.querySelector('.nav-brand img, img');
   if (brandImg) {
     brandImg.src = '/blocks/header/logo.svg';
     brandImg.removeAttribute('srcset');
     brandImg.setAttribute('alt', 'CompanyLogo');
     nav.querySelectorAll('picture source').forEach((s) => s.remove());
-  }
-  if (brandImg && !nav.querySelector('.nav-brand .brand-text')) {
-    const label = document.createElement('span');
-    label.className = 'brand-text';
-    label.textContent = 'Vishabh Docs';
-    const picture = brandImg.closest('picture') || brandImg;
-    picture.insertAdjacentElement('afterend', label);
-  }
 
-  let navSections = nav.querySelector('.nav-sections');
-  if (!navSections) {
-    navSections = document.createElement('div');
-    navSections.classList.add('nav-sections');
-    (mainSection || nav).append(navSections);
-  }
-
-  navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
-    if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-    navSection.addEventListener('click', () => {
-      if (isDesktop.matches) {
-        const expanded = navSection.getAttribute('aria-expanded') === 'true';
-        toggleAllNavSections(navSections);
-        navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    // Ensure the logo's own container carries .nav-brand even if tagging missed it.
+    const brandContainer = brandImg.closest('.nav-brand') || brandImg.closest('div') || brandImg.parentElement;
+    if (brandContainer) {
+      brandContainer.classList.add('nav-brand');
+      // Add the brand label once, right after the logo.
+      if (!brandContainer.querySelector('.brand-text')) {
+        const label = document.createElement('span');
+        label.className = 'brand-text';
+        label.textContent = 'Vishabh Docs';
+        (brandImg.closest('picture') || brandImg).insertAdjacentElement('afterend', label);
       }
-    });
-  });
+    }
+  }
 
+  // 3) Wire up sections (dropdowns), if any.
+  const navSections = nav.querySelector('.nav-sections');
+  if (navSections) {
+    navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
+      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+      navSection.addEventListener('click', () => {
+        if (isDesktop.matches) {
+          const expanded = navSection.getAttribute('aria-expanded') === 'true';
+          toggleAllNavSections(navSections);
+          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        }
+      });
+    });
+  }
+
+  // 4) Mobile "Table of content" toggle.
   const tocButton = nav.querySelector('.nav-toc-btn');
   const tocAnchor = tocButton ? tocButton.querySelector('a') : null;
   if (tocAnchor) {
@@ -158,6 +162,7 @@ export default async function decorate(block) {
     });
   }
 
+  // 5) Hamburger for mobile.
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
