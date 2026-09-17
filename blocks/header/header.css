@@ -32,7 +32,7 @@ header .nav-wrapper {
 }
 
 .nav-toc-btn a::before {
-  content: url(../sidenav/toc-icon.svg);
+  content: none;
   padding-right: 0.5rem;
   line-height: 1rem;
 }
