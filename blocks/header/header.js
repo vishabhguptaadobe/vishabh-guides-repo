@@ -107,6 +107,15 @@ function tagNavSections(nav) {
     if (p.querySelector('img, picture')) return;
     tools.append(p);
   });
+
+  // mark the action links so CSS can render them as icon buttons on mobile
+  tools.querySelectorAll('a').forEach((a) => {
+    const label = a.textContent.trim().toLowerCase();
+    a.classList.add('nav-action');
+    if (label.includes('contact')) a.classList.add('nav-action-contact');
+    else if (label.includes('sign')) a.classList.add('nav-action-signup');
+  });
+
   if (tools.children.length) nav.append(tools);
 }
 
