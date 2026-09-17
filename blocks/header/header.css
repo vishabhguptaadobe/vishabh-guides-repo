@@ -174,8 +174,8 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
     height: 2.25rem;
     font-size: 0;
     border-radius: 0.25rem;
-    border: 1px solid var(--header-button-group-button-border-color, #fff);
-    background-color: transparent;
+    border: 1px solid #fff;
+    background-color: #fff;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 1.1rem;
