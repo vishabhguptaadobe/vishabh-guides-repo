@@ -145,6 +145,23 @@ header nav[aria-expanded="true"] .nav-toc-btn > p a::before {
     display: none;
   }
 
+  /* --- mobile fixes --- */
+  header nav .nav-brand img {
+    height: 40px;
+    width: auto;
+  }
+
+  header nav .nav-tools {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  header nav .nav-tools a {
+    color: #fff;
+    text-decoration: none;
+  }
+
 header .header-button-group > div {
   gap: 0.5rem;
 }
@@ -476,6 +493,7 @@ header nav .nav-tools {
     grid-template: none;
     overflow: visible;
   }
+  
   header nav .nav-hamburger { display: none; }
 
   header nav .nav-brand {
