@@ -459,6 +459,7 @@ header nav .nav-tools {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 1.5rem;
     height: var(--nav-height);
     grid-template: none;
