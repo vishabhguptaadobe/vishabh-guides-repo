@@ -1,6 +1,6 @@
 import { migrateTree } from "../utils.js";
-const treeData = [{"displayName":"Adobe Experience Cloud","url":"","children":[{"displayName":"Adobe Experience Cloud","url":"contents/contenttopics/adobe-experience-cloud"},{"displayName":"Adobe Experience Manager Assets","url":"contents/contenttopics/aem-assets"},{"displayName":"Adobe Experience Manager Sites","url":"contents/contenttopics/aem-sites"},{"displayName":"Adobe Experience Manager Guides","url":"contents/contenttopics/aem-guides"}]}]
-const mapTitle = "Adobe Experience Cloud"
+const treeData = [{"displayName":"Adobe Experience Cloud","url":"","children":[{"displayName":"Adobe Experience Cloud","url":"contents/contenttopics/adobe-experience-cloud"},{"displayName":"Adobe Experience Manager Assets","url":"contents/contenttopics/aem-assets"},{"displayName":"Adobe Experience Manager Sites","url":"contents/contenttopics/aem-sites"},{"displayName":"Adobe Experience Manager Guides","url":"contents/contenttopics/aem-guides"}]},{"displayName":"Getting Started with EDS","url":"","children":[{"displayName":"Getting Started with EDS","url":"contents/contenttopics/getting-started-with-eds"},{"displayName":"Configure EDS profile in AEM","url":"contents/contenttopics/configure-eds-profile-in-aem"},{"displayName":"Customize Output","url":"contents/contenttopics/customize-output"}]},{"displayName":"Quick Help","url":"","children":[{"displayName":"Quick Help","url":"contents/contenttopics/quick-help"},{"displayName":"Contact Us","url":"contents/contenttopics/contact-us"}]}]
+const mapTitle = "Adobe Experience Cloud Products"
 const isDesktop = window.matchMedia("(min-width: 900px)");
 
 function expandHeirarchy(element, root) {
